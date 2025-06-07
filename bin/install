@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -e
 
 # Get the version to install
-version="${1:-}"
-install_path="${2:-}"
-
-if [ -z "$version" ] || [ -z "$install_path" ]; then
-    echo "Usage: $0 <version> <install_path>"
-    exit 1
-fi
+version="$1"
+install_path="$2"
 
 # Create a temporary directory
 temp_dir=$(mktemp -d)
@@ -30,4 +25,4 @@ mkdir -p "$install_path/bin"
 cp target/release/starknet-contract-verifier "$install_path/bin/"
 
 # Make the binary executable
-chmod +x "$install_path/bin/starknet-contract-verifier"
+chmod +x "$install_path/bin/starknet-contract-verifier" 
