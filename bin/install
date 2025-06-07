@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Starting installation..."
 echo "Arguments received: $@"
 
@@ -17,24 +19,35 @@ trap 'rm -rf "$temp_dir"' EXIT
 echo "Created temp directory: $temp_dir"
 
 # Clone the repository
-git clone https://github.com/NethermindEth/starknet-contract-verifier.git "$temp_dir"
+echo "Cloning repository..."
+if ! git clone https://github.com/NethermindEth/starknet-contract-verifier.git "$temp_dir"; then
+    echo "Failed to clone repository"
+    exit 1
+fi
+
 cd "$temp_dir"
-git checkout "v$version"
+echo "Checking out version v$version..."
+if ! git checkout "v$version"; then
+    echo "Failed to checkout version v$version"
+    exit 1
+fi
 
-echo "Cloned repository and checked out version v$version"
+echo "Building binary..."
+if ! cargo build --release; then
+    echo "Failed to build binary"
+    exit 1
+fi
 
-# Build the binary
-cargo build --release
-
-echo "Built binary"
-
-# Create the installation directory
+echo "Creating installation directory..."
 mkdir -p "$install_path/bin"
 
-# Copy the binary to the installation directory
-cp target/release/starknet-contract-verifier "$install_path/bin/"
+echo "Copying binary..."
+if ! cp target/release/starknet-contract-verifier "$install_path/bin/"; then
+    echo "Failed to copy binary"
+    exit 1
+fi
 
-# Make the binary executable
+echo "Making binary executable..."
 chmod +x "$install_path/bin/starknet-contract-verifier"
 
 echo "Installation complete" 
