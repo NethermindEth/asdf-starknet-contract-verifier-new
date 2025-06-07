@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# This script is not needed for this plugin as we build from source
+# But asdf requires it to exist
+exit 0 

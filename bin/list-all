@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Fetch all tags from the repository
+git ls-remote --tags https://github.com/NethermindEth/starknet-contract-verifier.git | \
+    grep -v '{}' | \
+    sed 's/.*refs\/tags\/v//' | \
+    sort -V 
