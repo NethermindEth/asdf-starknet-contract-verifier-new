@@ -2,13 +2,16 @@
 
 set -e
 
-echo "Starting installation..."
-echo "Arguments received: $@"
-
 # Get the version to install
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <version> <install_path>"
+    exit 1
+fi
+
 version="$1"
 install_path="$2"
 
+echo "Starting installation..."
 echo "Version: $version"
 echo "Install path: $install_path"
 
