@@ -1,29 +1,32 @@
 #!/bin/bash
 
-# Get the version to install
-if [ -z "${1:-}" ]; then
-    echo "Error: version parameter is required"
-    exit 1
-fi
-version="$1"
+echo "Starting installation..."
+echo "Arguments received: $@"
 
-if [ -z "${2:-}" ]; then
-    echo "Error: install path parameter is required"
-    exit 1
-fi
+# Get the version to install
+version="$1"
 install_path="$2"
+
+echo "Version: $version"
+echo "Install path: $install_path"
 
 # Create a temporary directory
 temp_dir=$(mktemp -d)
 trap 'rm -rf "$temp_dir"' EXIT
+
+echo "Created temp directory: $temp_dir"
 
 # Clone the repository
 git clone https://github.com/NethermindEth/starknet-contract-verifier.git "$temp_dir"
 cd "$temp_dir"
 git checkout "v$version"
 
+echo "Cloned repository and checked out version v$version"
+
 # Build the binary
 cargo build --release
+
+echo "Built binary"
 
 # Create the installation directory
 mkdir -p "$install_path/bin"
@@ -32,4 +35,6 @@ mkdir -p "$install_path/bin"
 cp target/release/starknet-contract-verifier "$install_path/bin/"
 
 # Make the binary executable
-chmod +x "$install_path/bin/starknet-contract-verifier" 
+chmod +x "$install_path/bin/starknet-contract-verifier"
+
+echo "Installation complete" 
